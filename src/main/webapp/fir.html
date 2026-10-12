@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register FIR</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Popup */
+        .popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2563eb;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header"><h2>FIR Management System</h2></header>
+
+<nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="fir.html" class="active">FIR</a>
+    <a href="track.html">Track</a>
+    <a href="aadhar.html">Aadhaar</a>
+    <a href="report.html">Reports</a>
+    <a href="about.html">About</a>
+     <a href="login.html">Login</a>
+</nav>
+
+<div class="form-card">
+    <h2>Register FIR</h2>
+
+    <form class="form" id="firForm" enctype="multipart/form-data">
+        <input type="text" name="fname" placeholder="Full Name" required>
+        <input type="text" name="ano" placeholder="Aadhaar Number" required>
+        <input type="text" name="mno" placeholder="Mobile Number" required>
+        <input type="text" name="addr" placeholder="Complainant Address" required>
+        <input type="text" name="location" placeholder="Crime Location" required>
+        <input type="text" name="ctype" placeholder="Crime Type" required>
+        <input type="text" name="ccategory" placeholder="Crime Category">
+        <input type="date" name="date" placeholder="Date of Incident">
+        <textarea placeholder="Description" name="desc"></textarea>
+        <input type="file" name="evidence">
+        <button type="submit">Submit FIR</button>
+    </form>
+</div>
+
+<div class="popup" id="popup"></div>
+
+<script>
+document.getElementById("firForm").addEventListener("submit", function(e){
+    e.preventDefault(); // page reload टाळा
+
+    // 👉 इथे validation add कर
+    let aadhaar = this.ano.value.trim();
+    let mobile = this.mno.value.trim();
+
+    const popup = document.getElementById("popup");
+
+    if(!/^\d{12}$/.test(aadhaar)){
+        popup.innerText = "Invalid Aadhaar Number";
+        popup.style.display = "block";
+        setTimeout(() => popup.style.display = "none", 3000);
+        return; // ❌ पुढे जाऊ देऊ नको
+    }
+
+    if(!/^[6-9]\d{9}$/.test(mobile)){
+        popup.innerText = "Invalid Mobile Number";
+        popup.style.display = "block";
+        setTimeout(() => popup.style.display = "none", 3000);
+        return;
+    }
+
+    // 👉 खाली तुझा original code तसाच ठेव
+    
+    
+    const formData = new FormData(this);
+    const params = new URLSearchParams(formData);
+    fetch("registerFIR", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        const popup = document.getElementById("popup");
+        if(data.success){
+            popup.innerText = `FIR submitted successfully! Your FIR Number is ${data.fir_no}`;
+        } else {
+            popup.innerText = `Error: ${data.message}`;
+        }
+        popup.style.display = "block";
+
+        // popup auto hide after 5 seconds
+        setTimeout(() => popup.style.display = "none", 5000);
+
+        // form reset if success
+        if(data.success) document.getElementById("firForm").reset();
+    })
+    .catch(err => console.error(err));
+});
+</script>
+
+</body>
+</html>
+
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <title>Register FIR</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header"><h2>FIR Management System</h2></header>
+
+<nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="fir.html" class="active">FIR</a>
+    <a href="track.html">Track</a>
+    <a href="aadhar.html">Aadhaar</a>
+    <a href="report.html">Reports</a>
+    <a href="about.html">About</a>
+</nav>
+
+<div class="form-card">
+    <h2>Register FIR</h2>
+
+    <form class="form" method="post" id="firForm">
+        <input type="text" name="fname" placeholder="Full Name" required>
+        <input type="text" name="ano" placeholder="Aadhaar Number" required>
+        <input type="text" name="mno" placeholder="Mobile Number" required>
+        <input type="text" name="addr" placeholder="Complainant Address" required>
+        <input type="text" name="location" placeholder="Crime Location" required>
+        <input type="text" name="ctype" placeholder="Crime Type" required>
+        <input type="text" name="ccategory" placeholder="Crime Category">
+        <input type="date" name="date" placeholder="Date of Incident">
+       
+        <textarea placeholder="Description" name="desc"></textarea>
+        <button type="submit">Submit FIR</button>
+    </form>
+</div>
+
+<script>
+document.getElementById("firForm").addEventListener("submit", function(e){
+    e.preventDefault(); // page reload stop
+    let form = this;
+
+    // Frontend Validations
+    let fullName = form.fname.value.trim();
+    let aadhaar = form.ano.value.trim();
+    let mobile = form.mno.value.trim();
+    let addr = form.addr.value.trim();
+    let location = form.location.value.trim();
+    let ctype = form.ctype.value.trim();
+
+    if(fullName === "" || aadhaar === "" || mobile === "" || addr === "" || location === "" || ctype === ""){
+        alert("Please fill all required fields");
+        return;
+    }
+
+    if(!/^\d{12}$/.test(aadhaar)){
+        alert("Your Aadhaar Number is wrong");
+        return;
+    }
+
+    if(!/^\d{10}$/.test(mobile)){
+        alert("Your Mobile Number is wrong");
+        return;
+    }
+
+    // Submit form via AJAX
+    let formData = new FormData(form);
+    fetch("registerFIR", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            alert(data.message); // success message
+            form.reset();
+        } else {
+            alert(data.message); // error message
+        }
+    })
+    .catch(err => console.error(err));
+});
+</script>
+</body>
+</html>
+
+<!--  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register FIR</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Popup */
+        .popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2563eb;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header"><h2>FIR Management System</h2></header>
+
+<nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="fir.html" class="active">FIR</a>
+    <a href="track.html">Track</a>
+    <a href="aadhar.html">Aadhaar</a>
+    <a href="report.html">Reports</a>
+    <a href="about.html">About</a>
+</nav>
+
+<div class="form-card">
+    <h2>Register FIR</h2>
+
+    <form class="form" id="firForm">
+        <input type="text" name="fname" placeholder="Full Name" required>
+        <input type="text" name="ano" placeholder="Aadhaar Number" required>
+        <input type="text" name="mno" placeholder="Mobile Number" required>
+        <input type="text" name="addr" placeholder="Complainant Address" required>
+        <input type="text" name="location" placeholder="Crime Location" required>
+        <input type="text" name="ctype" placeholder="Crime Type" required>
+        <input type="text" name="ccategory" placeholder="Crime Category">
+        <input type="date" name="date" placeholder="Date of Incident">
+        <input type="text" name="status" placeholder="Status">
+        <textarea placeholder="Description" name="desc"></textarea>
+        <button type="submit">Submit FIR</button>
+    </form>
+</div>
+
+<div class="popup" id="popup"></div>
+
+<script>
+document.getElementById("firForm").addEventListener("submit", function(e){
+    e.preventDefault(); // page reload टाळा
+
+    const formData = new FormData(this);
+    const params = new URLSearchParams(formData);
+
+    fetch("registerFIR", {
+        method: "POST",
+        body: params
+    })
+    .then(res => res.json())
+    .then(data => {
+        const popup = document.getElementById("popup");
+        if(data.success){
+            popup.innerText = `FIR submitted successfully! Your FIR Number is ${data.fir_no}`;
+        } else {
+            popup.innerText = `Error: ${data.message}`;
+        }
+        popup.style.display = "block";
+
+        // popup auto hide after 5 seconds
+        setTimeout(() => popup.style.display = "none", 5000);
+
+        // form reset if success
+        if(data.success) document.getElementById("firForm").reset();
+    })
+    .catch(err => console.error(err));
+});
+</script>
+
+</body>
+</html>
+
+<!--<!DOCTYPE html>
+<html>
+<head>
+<title>Register FIR</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header class="header"><h2>FIR Management System</h2></header>
+
+<nav class="nav">
+
+    <a href="index.html">Home</a>
+    <a href="fir.html">FIR</a>
+    <a href="track.html">Track</a>
+    <a href="aadhar.html">Aadhaar</a>
+    <a href="report.html">Reports</a>
+    <a href="about.html">About</a>
+</nav>
+
+<nav class="nav">
+<!--<a href="index.html">Home</a>-->
+<!--  </nav>
+
+
+<div class="form-card">
+<h2>Register FIR</h2>
+
+<form class="form" method="post" action="registerFIR" id="firForm">
+<!-- <input type="text" name="firno" placeholder="FIR Id">-->
+<!--  <input type="text" name="fname" placeholder="Full Name" required>
+<input type="text" name="ano" placeholder="Aadhaar Number" required>
+<input type="text" name="mno" placeholder="Mobile Number" required>
+<input type="text" name="addr" placeholder="Complainant Address" required>
+<input type="text" name="location" placeholder=" Crime Location" required>
+<input type="text" name="ctype" placeholder="Crime Type" required>
+<input type="text" name="ccategory" placeholder="Crime Category">
+<input type="date" name="date" placeholder="Date of Incident"required>
+<input type="text"  name="status" placeholder="Status">
+<textarea placeholder="Description" name="desc"></textarea>
+<button type="submit">Submit FIR</button>
+</form>
+
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>-->

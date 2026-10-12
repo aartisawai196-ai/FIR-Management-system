@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Track FIR - FIR System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <h2>FIR Management System</h2>
+</header>
+
+<nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="fir.html">FIR</a>
+    <a href="track.html" class="active">Track</a>
+    <a href="aadhar.html">Aadhaar</a>
+    <a href="report.html">Reports</a>
+    <a href="about.html">About</a>
+     <a href="login.html">Login</a>
+</nav>
+
+<div class="main-container">
+    <div class="card">
+        <h2>Track FIR Status</h2>
+
+        <form  action="trackFIR" id="trackForm" method="POST" >
+            <input 
+                type="text" 
+                name="firNo" 
+                id="trackFIRNo"
+                placeholder="Enter FIR Number" 
+                required
+            >
+            <button type="submit" id="trackBtn">Track FIR</button>
+        </form>
+
+        <div id="trackResult"> </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+<!-- CREATE DATABASE fir_db;
+CREATE TABLE firs (
+    fir_no VARCHAR(20) PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    aadhaar VARCHAR(20) NOT NULL,
+    crime_type VARCHAR(50) NOT NULL,
+    crime_category VARCHAR(50),
+    incident_date DATE,
+    status VARCHAR(20),
+    description TEXT
+);
+
+package com.fir;
+
+import java.sql.*;
+
+public class DBConnection {
+    private static final String URL = "jdbc:postgresql://localhost:5432/fir_db";
+    private static final String USER = "postgres"; // बदल करा
+    private static final String PASSWORD = "password"; // बदल करा
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -->

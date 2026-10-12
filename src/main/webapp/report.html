@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FIR Report - FIR System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <h2>FIR Management System</h2>
+</header>
+
+<nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="fir.html">FIR</a>
+    <a href="track.html">Track</a>
+    <a href="aadhar.html">Aadhaar</a>
+    <a href="report.html" class="active">Reports</a>
+    <a href="about.html">About</a>
+     <a href="login.html">Login</a>
+</nav>
+
+<div class="main-container">
+    <div class="card">
+        <h2>Generate FIR Report</h2>
+        
+
+        <form  action="downloadFIR" method="post">
+            <input 
+                type="text" 
+                id="firReportNo"
+                name="firNo" 
+                placeholder="Enter FIR Number" 
+                required
+            >
+            <button type="submit" >Download FIR Report</button>
+        </form>
+
+        <div id="reportResult"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

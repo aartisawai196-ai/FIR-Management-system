@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aadhaar - FIR System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <h2>FIR Management System</h2>
+</header>
+
+<nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="fir.html">FIR</a>
+    <a href="track.html">Track</a>
+    <a href="aadhar.html" class="active">Aadhaar</a>
+    <a href="report.html">Reports</a>
+    <a href="about.html">About</a>
+     <a href="login.html">Login</a>
+</nav>
+
+<div class="main-container">
+    <!-- Form Card -->
+    <div class="card" id="aadhaarFormCard">
+        <h2>Aadhaar FIR History</h2>
+        <input type="text" id="aadharNo" placeholder="Enter Aadhaar Number">
+        <button type="button" onclick="searchFIR()">View History</button>
+    </div>
+
+    <!-- Result Container -->
+    <div id="result"></div>
+</div>
+
+<script type="text/javascript">
+function searchFIR() {
+    let aadhar = document.getElementById("aadharNo").value;
+
+    fetch("AadharFIRServlet", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "aadhaarNo=" + aadhar
+    })
+    .then(res => res.json())
+    .then(data => {
+        let html = "";
+
+        if (data.length === 0) {
+            html = "<h3 style='text-align:center;'>No FIR Found</h3>";
+        } else {
+            html += "<div style='display:flex; flex-wrap:wrap; gap:20px; justify-content:center;'>";
+
+            data.forEach(fir => {
+                html += `
+                <div style="width:300px; padding:15px; border-radius:12px;
+                            box-shadow:0 0 10px rgba(0,0,0,0.2); background:#fff;">
+                    <h3 style="color:#2c3e50;">FIR No: ${fir.fir_no}</h3>
+                    <p><b>Name:</b> ${fir.full_name}</p>
+                    <p><b>Crime:</b> ${fir.crime}</p>
+                    <p><b>Location:</b> ${fir.location}</p>
+                    <p><b>Status:</b> ${fir.status}</p>
+                </div>
+                `;
+            });
+
+            html += "</div>";
+        }
+
+        document.getElementById("result").innerHTML = html;
+    })
+    .catch(err => console.error(err));
+}
+</script>
+
+</body>
+</html>
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aadhaar - FIR System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <h2>FIR Management System</h2>
+</header>
+
+<nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="fir.html">FIR</a>
+    <a href="track.html">Track</a>
+    <a href="aadhar.html" class="active">Aadhaar</a>
+    <a href="report.html">Reports</a>
+    <a href="about.html">About</a>
+</nav>
+
+<div class="main-container">
+    <div class="card">
+        <h2>Aadhaar FIR History</h2>
+
+      <!--<form id="aadhaarForm" action="aadhaarFIR" method="POST">-->
+    <!--  <input 
+        type="text"
+        id="aadhaarNo"
+        name="aadhaarNo" 
+        placeholder="Enter Aadhaar Number" 
+        required
+    >
+    <div style="text-align:center; margin-top:10px;">
+    <input type="text" id="aadharNo" name ="aadhaarNo" placeholder="Enter Aadhar Number"
+           style="padding:10px; width:250px; border-radius:8px;">
+           
+           
+    <button type="button" onclick="searchFIR()" style="padding:10px 20px; background:#2c3e50; color:white; border:none; border-radius:8px;">View History</button>
+</form>
+
+<div id="result" style="margin-top:5px; clear:both;"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+function searchFIR() {
+    let aadhar = document.getElementById("aadharNo").value;
+
+    fetch("AadharFIRServlet", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "aadhaarNo=" + aadhar
+    })
+    .then(res => res.json())
+    .then(data => {
+        let html = "";
+
+        if (data.length === 0) {
+            html = "<h3 style='text-align:center;'>No FIR Found</h3>";
+        } else {
+            html += "<div style='display:flex; flex-wrap:wrap; gap:20px; justify-content:center;'>";
+
+            data.forEach(fir => {
+                html += `
+                <div style="width:300px; padding:15px; border-radius:12px;
+                            box-shadow:0 0 10px rgba(0,0,0,0.2); background:#fff;">
+                    
+                    <h3 style="color:#2c3e50;">FIR No: ${fir.fir_no}</h3>
+                    <p><b style="color:#2c3e50;" >Name:</b> ${fir.full_name}</p>
+                    <p><b style="color:#2c3e50;">Crime:</b> ${fir.crime}</p>
+                    <p><b style="color:#2c3e50;">Location:</b> ${fir.location}</p>
+                    <p><b style="color:#2c3e50;">Status:</b> ${fir.status}</p>
+                </div>
+                `;
+            });
+
+            html += "</div>";
+        }
+
+        document.getElementById("result").innerHTML = html;
+    })
+    .catch(err => console.error(err));
+}
+
+</script>
+</body>
+</html>-->
